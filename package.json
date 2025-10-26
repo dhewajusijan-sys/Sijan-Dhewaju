@@ -1,5 +1,5 @@
 {
-  "name": "super-ai-platform",
+  "name": "nepal's-1st-ai",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,7 +11,8 @@
   "dependencies": {
     "react": "^19.2.0",
     "@google/genai": "^1.26.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "react-beautiful-dnd": "^13.1.1"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

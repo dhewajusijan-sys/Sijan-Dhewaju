@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Super AI Platform</title>
+    <title>Nepal's 1st AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide-react@latest/dist/lucide-react.js"></script>
     <script>
@@ -14,8 +13,42 @@
         theme: {
           extend: {
             colors: {
-              'brand-primary': '#6366F1',
-              'brand-secondary': '#8B5CF6',
+              'brand-blue': '#0ea5e9',   // Electric Blue
+              'brand-purple': '#a78bfa', // Ethereal Purple
+              'brand-cyan': '#22d3ee',   // Bright Cyan
+              'charcoal-900': '#111827',
+              'charcoal-800': '#1f2937',
+              'charcoal-700': '#374151',
+            },
+            keyframes: {
+              'background-pan': {
+                '0%': { backgroundPosition: '0% 50%' },
+                '50%': { backgroundPosition: '100% 50%' },
+                '100%': { backgroundPosition: '0% 50%' },
+              },
+              'glow-pulse': {
+                '0%, 100%': { boxShadow: '0 0 10px 0px rgba(34, 211, 238, 0.3), inset 0 0 5px 0px rgba(34, 211, 238, 0.2)' },
+                '50%': { boxShadow: '0 0 20px 5px rgba(34, 211, 238, 0.5), inset 0 0 10px 2px rgba(34, 211, 238, 0.3)' },
+              },
+              'purple-glow-pulse': {
+                '0%, 100%': { boxShadow: '0 0 15px 2px rgba(167, 139, 250, 0.4), inset 0 0 8px 1px rgba(167, 139, 250, 0.2)' },
+                '50%': { boxShadow: '0 0 30px 8px rgba(167, 139, 250, 0.6), inset 0 0 14px 3px rgba(167, 139, 250, 0.3)' },
+              },
+              'subtle-pulse': {
+                 '0%, 100%': { opacity: 1 },
+                 '50%': { opacity: 0.8 },
+              },
+              'message-in': {
+                'from': { opacity: '0', transform: 'translateY(10px) scale(0.98)' },
+                'to': { opacity: '1', transform: 'translateY(0) scale(1)' },
+              },
+            },
+            animation: {
+              'background-pan': 'background-pan 30s ease-in-out infinite',
+              'glow-pulse': 'glow-pulse 2.5s ease-in-out infinite',
+              'purple-glow-pulse': 'purple-glow-pulse 2.5s ease-in-out infinite',
+              'subtle-pulse': 'subtle-pulse 3s ease-in-out infinite',
+              'message-in': 'message-in 0.5s ease-out forwards',
             }
           }
         }
@@ -27,13 +60,62 @@
     "react/": "https://aistudiocdn.com/react@^19.2.0/",
     "react": "https://aistudiocdn.com/react@^19.2.0",
     "@google/genai": "https://aistudiocdn.com/@google/genai@^1.26.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react-dom": "https://aistudiocdn.com/react-dom@^19.2.0",
+    "react-beautiful-dnd": "https://aistudiocdn.com/react-beautiful-dnd@^13.1.1"
   }
 }
 </script>
+<style>
+  /* Light mode defaults */
+  body {
+    -webkit-tap-highlight-color: transparent;
+    background-color: #f1f5f9; /* slate-100 */
+    background-image: 
+      radial-gradient(at 20% 20%, hsla(212, 90%, 95%, 0.4) 0px, transparent 50%),
+      radial-gradient(at 80% 20%, hsla(280, 80%, 95%, 0.4) 0px, transparent 50%),
+      radial-gradient(at 20% 80%, hsla(190, 90%, 95%, 0.4) 0px, transparent 50%),
+      radial-gradient(at 80% 80%, hsla(260, 85%, 95%, 0.4) 0px, transparent 50%);
+    background-size: 200% 200%;
+    animation: background-pan 30s ease-in-out infinite;
+  }
+  .global-panel {
+    background-color: rgba(255, 255, 255, 0.6); /* white with opacity */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(226, 232, 240, 0.7); /* slate-200 */
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  }
+  ::selection {
+    background-color: rgba(34, 211, 238, 0.3); /* brand-cyan */
+  }
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background-color: rgba(148, 163, 184, 0.5); border-radius: 4px; border: 2px solid transparent; background-clip: content-box; } /* slate-400 */
+  ::-webkit-scrollbar-thumb:hover { background-color: rgba(100, 116, 139, 0.6); } /* slate-500 */
+
+  /* Dark mode overrides */
+  .dark body {
+    background-color: #111827;
+    background-image: 
+      radial-gradient(at 20% 20%, hsla(212, 90%, 25%, 0.2) 0px, transparent 50%),
+      radial-gradient(at 80% 20%, hsla(280, 80%, 30%, 0.2) 0px, transparent 50%),
+      radial-gradient(at 20% 80%, hsla(190, 90%, 35%, 0.2) 0px, transparent 50%),
+      radial-gradient(at 80% 80%, hsla(260, 85%, 35%, 0.2) 0px, transparent 50%);
+  }
+  .dark .global-panel {
+    background-color: rgba(17, 24, 39, 0.6); /* charcoal-900 with opacity */
+    border: 1px solid rgba(34, 211, 238, 0.15); /* brand-cyan with opacity */
+    box-shadow: 0 0 40px rgba(14, 165, 233, 0.1); /* brand-blue glow */
+  }
+  .dark ::-webkit-scrollbar-thumb { background-color: rgba(34, 211, 238, 0.3); }
+  .dark ::-webkit-scrollbar-thumb:hover { background-color: rgba(34, 211, 238, 0.5); }
+</style>
 </head>
-  <body class="bg-slate-900 text-slate-200">
+  <body class="text-slate-800 dark:text-slate-200 min-h-screen antialiased overflow-x-hidden">
     <div id="root"></div>
+    <div id="modal-root"></div>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
     <script type="module" src="/index.tsx"></script>
   </body>
 </html>

@@ -1,7 +1,9 @@
 {
-  "name": "Super AI Platform",
+  "name": "Nepal's 1st AI",
   "description": "A consolidated AI platform integrating chat, voice, multimodal analysis, and media generation into a single, responsive UI powered by the Gemini API.",
   "requestFramePermissions": [
-    "microphone"
+    "microphone",
+    "camera",
+    "geolocation"
   ]
 }

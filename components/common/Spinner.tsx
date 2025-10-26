@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 const Spinner: React.FC = () => {
@@ -13,7 +12,7 @@ const Spinner: React.FC = () => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="animate-spin text-brand-primary"
+      className="animate-spin text-brand-cyan"
     >
       <path d="M21 12a9 9 0 1 1-6.219-8.56" />
     </svg>
