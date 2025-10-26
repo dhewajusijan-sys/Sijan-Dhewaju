@@ -58,7 +58,7 @@ const DataLab: React.FC = () => {
     }, [dataFile, code]);
 
     return (
-        <div className="p-4 sm:p-6 h-full flex flex-col bg-slate-50 dark:bg-transparent text-slate-900 dark:text-slate-200">
+        <div className="p-3 h-full flex flex-col bg-slate-50 dark:bg-transparent text-slate-900 dark:text-slate-200">
             <h3 className="text-xl font-bold mb-4">Data Lab</h3>
             <div className="flex-grow grid md:grid-cols-2 gap-6 overflow-hidden">
                 <div className="flex flex-col gap-4 overflow-y-auto pr-2">

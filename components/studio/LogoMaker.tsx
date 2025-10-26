@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useEffect } from 'react';
 import { generateImage, editImage } from '../../services/geminiService';
 import Spinner from '../common/Spinner';
@@ -79,7 +80,7 @@ const LogoMaker: React.FC<LogoMakerProps> = ({ initialData }) => {
     }, [prompt, referenceImage, selectedStyle, selectedPalette]);
 
     return (
-        <div className="p-4 sm:p-6 h-full flex flex-col">
+        <div className="p-3 h-full flex flex-col">
             <h3 className="text-xl font-bold mb-4">Logo Maker</h3>
             <div className="flex-grow grid md:grid-cols-3 gap-6 overflow-hidden">
                 {/* Left Panel: Controls */}

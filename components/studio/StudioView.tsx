@@ -29,7 +29,7 @@ const StudioView: React.FC<StudioViewProps> = ({ initialToolData, onDataConsumed
   return (
     <div className="flex flex-col md:flex-row h-full">
       {/* Mobile Dropdown */}
-      <div className="p-4 border-b border-slate-200 dark:border-brand-cyan/20 md:hidden">
+      <div className="px-2 py-3 border-b border-slate-200 dark:border-brand-cyan/20 md:hidden">
         <label htmlFor="studio-tool-select" className="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">
           Select a Tool
         </label>
@@ -53,7 +53,7 @@ const StudioView: React.FC<StudioViewProps> = ({ initialToolData, onDataConsumed
       </div>
 
       {/* Desktop Sidebar */}
-      <aside className="hidden md:block w-64 flex-shrink-0 bg-slate-100/50 dark:bg-charcoal-900/30 border-r border-slate-200 dark:border-brand-cyan/20 p-4 overflow-y-auto">
+      <aside className="hidden md:block w-64 flex-shrink-0 bg-slate-100/50 dark:bg-charcoal-900/30 border-r border-slate-200 dark:border-brand-cyan/20 px-2 py-4 overflow-y-auto">
         <h2 className="text-lg font-bold mb-4 text-slate-900 dark:text-slate-100" style={{ textShadow: '0 0 8px rgba(34, 211, 238, 0.5)' }}>Studio Tools</h2>
         <nav className="flex flex-col gap-2">
           {STUDIO_TOOLS.map(tool => (

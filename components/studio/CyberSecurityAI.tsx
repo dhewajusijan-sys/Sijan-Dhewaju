@@ -82,7 +82,7 @@ const CyberSecurityAI: React.FC = () => {
     const isSubmitDisabled = isLoading || (analysisType === 'File' ? !file : !content.trim());
 
     return (
-        <div className="p-6 h-full flex flex-col">
+        <div className="p-3 h-full flex flex-col">
             <h3 className="text-xl font-bold mb-4">Cyber Security AI Analyst</h3>
             <div className="flex-grow grid grid-cols-1 md:grid-cols-2 gap-6 overflow-hidden">
                 <div className="flex flex-col gap-4 overflow-y-auto pr-2">

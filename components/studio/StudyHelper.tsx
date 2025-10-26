@@ -255,7 +255,7 @@ const StudyHelper: React.FC = () => {
                     ))}
                 </nav>
             </div>
-            <div className="flex-grow p-4 sm:p-6 overflow-hidden">
+            <div className="flex-grow p-3 overflow-hidden">
                 {renderTool()}
             </div>
         </div>

@@ -43,7 +43,7 @@ const LearningHub: React.FC = () => {
                     ))}
                 </nav>
             </div>
-            <div className="flex-grow overflow-hidden bg-slate-50 dark:bg-transparent">
+            <div className="flex-grow p-3 overflow-hidden bg-slate-50 dark:bg-transparent">
                 {renderTool()}
             </div>
         </div>

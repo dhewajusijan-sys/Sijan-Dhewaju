@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import { generatePresentation, generateImage, refineSlideContent } from '../../services/geminiService';
 import Spinner from '../common/Spinner';
@@ -192,7 +191,7 @@ const PresentationMaker: React.FC = () => {
     );
 
     return (
-        <div className="p-6 h-full flex flex-col">
+        <div className="p-3 h-full flex flex-col">
             <div className="flex justify-between items-start mb-4">
                 <h3 className="text-xl font-bold">Presentation Studio</h3>
                 {slides.length > 0 && (

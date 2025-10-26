@@ -108,7 +108,7 @@ const NoteTaker: React.FC = () => {
     }, [stopRecording, handleSummarization]);
 
     return (
-        <div className="p-4 sm:p-6 h-full flex flex-col bg-slate-100 dark:bg-slate-900/50">
+        <div className="p-3 h-full flex flex-col bg-slate-100 dark:bg-slate-900/50">
             <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-bold">Live Note Taker</h3>
                 <button onClick={isRecording ? stopRecording : startRecording} disabled={isConnecting} className={`px-6 py-2 rounded-full font-semibold text-lg text-white transition-colors disabled:opacity-50 ${isRecording ? 'bg-red-600' : 'bg-green-600'}`}>

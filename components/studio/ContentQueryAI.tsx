@@ -81,7 +81,7 @@ const ContentQueryAI: React.FC = () => {
 
 
     return (
-        <div className="p-4 sm:p-6 h-full flex flex-col">
+        <div className="p-3 h-full flex flex-col">
             <h3 className="text-xl font-bold mb-4">Content Query AI</h3>
             <div className="flex-grow grid md:grid-cols-3 gap-6 overflow-hidden">
                 <div className="md:col-span-1 flex flex-col gap-4 overflow-y-auto pr-2">

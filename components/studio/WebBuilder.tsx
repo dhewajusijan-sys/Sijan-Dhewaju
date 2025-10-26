@@ -170,7 +170,7 @@ const WebBuilder: React.FC = () => {
         }
         return (
             <>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <div><label className="block text-xs font-medium mb-1">Project Type</label><select value={projectType} onChange={e => setProjectType(e.target.value as ProjectType)} className="w-full text-sm bg-white dark:bg-slate-700/50 border border-slate-300 dark:border-slate-600 p-2 rounded-md"><option>Website</option><option>App</option><option>Game</option></select></div>
                     <div><label className="block text-xs font-medium mb-1">Platform</label><select value={platforms} onChange={e => setPlatforms(e.target.value as Platform)} className="w-full text-sm bg-white dark:bg-slate-700/50 border border-slate-300 dark:border-slate-600 p-2 rounded-md"><option>Web</option><option>iOS</option><option>Android</option><option>Cross-Platform</option></select></div>
                 </div>
@@ -215,7 +215,7 @@ const WebBuilder: React.FC = () => {
                     {error && <p className="text-red-500 dark:text-red-400 text-sm mt-2">{error}</p>}
                      <div className="mt-auto pt-4 space-y-2">
                          <h4 className="text-sm font-semibold text-slate-500 dark:text-slate-400">Business Features</h4>
-                         <div className="grid grid-cols-2 gap-2">
+                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             <FeaturePlaceholder title={isAnalyzing ? "Analyzing..." : "SEO Tools"} description="Optimize for search." onClick={() => handleAnalysis('seo')} disabled={!codeFiles || isAnalyzing} />
                             <FeaturePlaceholder title={isAnalyzing ? "Analyzing..." : "Analytics"} description="Track user engagement." onClick={() => handleAnalysis('analytics')} disabled={!codeFiles || isAnalyzing} />
                             <FeaturePlaceholder title="Version Control" description="Save & restore points." disabled />

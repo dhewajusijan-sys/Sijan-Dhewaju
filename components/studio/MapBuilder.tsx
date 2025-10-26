@@ -120,7 +120,7 @@ const ThreeDCreator: React.FC = () => {
     }, [generatedModel, texturePrompt]);
 
     return (
-        <div className="p-4 sm:p-6 h-full flex flex-col bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-200">
+        <div className="p-3 h-full flex flex-col bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-200">
             <h3 className="text-xl font-bold mb-4 text-slate-900 dark:text-white">3D Creator</h3>
             <div className="flex-grow grid md:grid-cols-5 gap-6 overflow-hidden">
                 {/* Left Panel: Generation */}

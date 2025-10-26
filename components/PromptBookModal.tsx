@@ -30,14 +30,14 @@ const PromptBookModal: React.FC<PromptBookModalProps> = ({ onClose, onSelectProm
           <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100" style={{ textShadow: '0 0 8px rgba(34, 211, 238, 0.5)' }}>The Ultimate Prompt Book</h2>
           <button onClick={onClose} className="p-1 rounded-full text-slate-500 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-charcoal-700/50 dark:hover:text-white">&times;</button>
         </header>
-        <div className="flex flex-grow overflow-hidden">
-          <aside className="w-1/4 border-r border-slate-200 dark:border-brand-cyan/20 overflow-y-auto p-2">
-            <nav className="flex flex-col gap-1">
+        <div className="flex flex-col md:flex-row flex-grow overflow-hidden">
+          <aside className="w-full md:w-1/4 border-b md:border-b-0 md:border-r border-slate-200 dark:border-brand-cyan/20 p-2 md:overflow-y-auto">
+            <nav className="flex flex-row md:flex-col gap-1 overflow-x-auto pb-2 md:pb-0">
               {Object.keys(PROMPT_BOOK).map(category => (
                 <button
                   key={category}
                   onClick={() => setActiveCategory(category)}
-                  className={`text-left text-sm p-2 rounded-md transition-colors ${
+                  className={`text-left text-sm p-2 rounded-md transition-colors flex-shrink-0 whitespace-nowrap ${
                     activeCategory === category ? 'bg-brand-blue/20 text-brand-cyan font-semibold' : 'text-slate-700 hover:bg-slate-200/50 dark:text-white dark:hover:bg-charcoal-700/50'
                   }`}
                 >
@@ -46,7 +46,7 @@ const PromptBookModal: React.FC<PromptBookModalProps> = ({ onClose, onSelectProm
               ))}
             </nav>
           </aside>
-          <main className="w-3/4 flex flex-col">
+          <main className="w-full md:w-3/4 flex flex-col">
             <div className="p-4 border-b border-slate-200 dark:border-brand-cyan/20 flex-shrink-0">
               <input
                 type="search"

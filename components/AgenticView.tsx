@@ -86,7 +86,7 @@ const AgenticView: React.FC = () => {
     };
     
     const renderStep = (step: AgenticStep) => (
-        <div key={step.step} className="p-4 bg-white/50 dark:bg-charcoal-900/50 rounded-lg border border-slate-200 dark:border-brand-cyan/20">
+        <div key={step.step} className="p-3 sm:p-4 bg-white/50 dark:bg-charcoal-900/50 rounded-lg border border-slate-200 dark:border-brand-cyan/20">
             <div className="flex items-start gap-3">
                 <div className="flex-shrink-0 pt-1">{getStatusIcon(step.status)}</div>
                 <div>
@@ -106,7 +106,7 @@ const AgenticView: React.FC = () => {
         <div className="flex flex-col h-full text-slate-700 dark:text-slate-300">
             <div className="flex-grow p-4 sm:p-6 overflow-y-auto space-y-6">
                 <div className="text-center max-w-2xl mx-auto">
-                    <h2 className="text-3xl font-bold mb-2 text-slate-800 dark:text-slate-100" style={{ textShadow: '0 0 10px rgba(34, 211, 238, 0.5)' }}>Agentic AI</h2>
+                    <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-slate-800 dark:text-slate-100" style={{ textShadow: '0 0 10px rgba(34, 211, 238, 0.5)' }}>Agentic AI</h2>
                     <p className="text-slate-500">Give the AI a goal, and watch it think, plan, and act to find the answer.</p>
                 </div>
 
@@ -134,7 +134,7 @@ const AgenticView: React.FC = () => {
                         className="w-full bg-transparent p-2 focus:outline-none text-slate-800 dark:text-slate-300 placeholder-slate-500"
                         disabled={isRunning}
                     />
-                    <button onClick={handleExecute} disabled={!goal.trim() || isRunning} className="py-2 px-6 bg-brand-blue text-white rounded-lg disabled:bg-slate-400 dark:disabled:bg-charcoal-700 transition-colors">
+                    <button onClick={handleExecute} disabled={!goal.trim() || isRunning} className="py-2 px-4 sm:px-6 bg-brand-blue text-white rounded-lg disabled:bg-slate-400 dark:disabled:bg-charcoal-700 transition-colors">
                         {isRunning ? <Spinner/> : 'Execute'}
                     </button>
                 </div>

@@ -1,5 +1,3 @@
-
-
 import React, { useState, useCallback } from 'react';
 import { editImage, generateImage } from '../../services/geminiService';
 import Spinner from '../common/Spinner';
@@ -207,7 +205,7 @@ const PhotoEditor: React.FC = () => {
   const displayUrl = resultImageUrl || sourceImage?.url;
 
   return (
-    <div className="p-4 sm:p-6 h-full flex flex-col">
+    <div className="p-3 h-full flex flex-col">
       <h3 className="text-xl font-bold mb-4">Photo Editor</h3>
       <div className="flex bg-slate-200 dark:bg-slate-800 rounded-md p-1 mb-4 flex-shrink-0">
           <button onClick={() => handleModeChange('generate')} className={`flex-1 text-sm p-2 rounded ${mode === 'generate' ? 'bg-brand-primary text-white' : 'hover:bg-slate-300 dark:hover:bg-slate-700'}`}>Generate</button>

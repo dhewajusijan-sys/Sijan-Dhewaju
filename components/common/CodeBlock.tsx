@@ -32,7 +32,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ language, code }) => {
           )}
         </button>
       </div>
-      <pre className="p-4 text-sm overflow-x-auto">
+      <pre className="p-2 sm:p-4 text-sm overflow-x-auto">
         <code>{code}</code>
       </pre>
     </div>

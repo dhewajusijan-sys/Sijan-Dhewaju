@@ -96,7 +96,7 @@ const FaceAnalyzer: React.FC = () => {
     };
 
     return (
-        <div className="p-6 h-full flex flex-col">
+        <div className="p-3 h-full flex flex-col">
             <h3 className="text-xl font-bold mb-4">Face Analyzer</h3>
             <div className="flex-grow grid md:grid-cols-2 gap-6 overflow-hidden">
                 <div className="flex flex-col gap-4 overflow-y-auto pr-2">

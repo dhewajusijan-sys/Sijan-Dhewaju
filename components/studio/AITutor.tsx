@@ -121,7 +121,7 @@ const AITutor: React.FC = () => {
     
     if (view === 'idle' || view === 'planning') {
         return (
-            <div className="h-full flex flex-col items-center justify-center p-4 text-center">
+            <div className="h-full flex flex-col items-center justify-center p-3 text-center">
                 <h3 className="text-xl font-bold mb-2">Agent-Based Learning</h3>
                 <p className="text-slate-600 dark:text-slate-400 mb-6">This is AI Prep 1.0. Start a lesson on any topic to begin.</p>
                 {view === 'planning' ? <Spinner /> : (
@@ -137,7 +137,7 @@ const AITutor: React.FC = () => {
     }
     
     return (
-        <div className="h-full grid md:grid-cols-3 gap-4 p-4 overflow-hidden">
+        <div className="h-full grid md:grid-cols-3 gap-4 p-3 overflow-hidden">
             <div className="md:col-span-1 flex flex-col gap-3 overflow-y-auto pr-2">
                 <button onClick={() => setView('idle')} className="text-sm text-brand-primary hover:underline self-start">{'<'} Change Topic</button>
                 <h4 className="font-bold text-lg">Lesson Plan: {topic}</h4>

@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import { analyzeImage, solveTextQuestion } from '../../services/geminiService';
 import Spinner from '../common/Spinner';
@@ -69,7 +68,7 @@ const QuestionPaperSolver: React.FC = () => {
   const isSubmitDisabled = isLoading || (inputType === 'image' && !imageFile) || (inputType === 'text' && !textQuestion.trim());
 
   return (
-    <div className="p-6 h-full flex flex-col">
+    <div className="p-3 h-full flex flex-col">
         <h3 className="text-xl font-bold mb-4">Question Solver</h3>
         <div className="flex-grow grid grid-rows-2 md:grid-rows-1 md:grid-cols-2 gap-6 overflow-hidden">
             <div className="flex flex-col gap-4 overflow-y-auto pr-2">

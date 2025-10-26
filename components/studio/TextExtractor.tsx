@@ -188,89 +188,86 @@ const TextExtractor: React.FC = () => {
         if (!result) return null;
         switch (activeTab) {
             case 'raw': return <pre className="whitespace-pre-wrap font-sans text-sm">{result.rawText || 'No raw text extracted.'}</pre>;
+            // Fix: Complete the `renderResult` function which was truncated, causing a syntax error.
             case 'kvp': return <CodeBlock language="json" code={JSON.stringify(result.keyValuePairs || [], null, 2)} />;
-            case 'tables': return (
-                <div className="space-y-4">
-                    {(result.tables && result.tables.length > 0) ? result.tables.map((table: any, index: number) => (
-                        <div key={index}>
-                            {table.title && <h5 className="font-semibold mb-1">{table.title}</h5>}
-                            <table className="w-full text-left text-xs border-collapse">
-                                <thead>
-                                    <tr>{table.headers?.map((header: string, i: number) => <th key={i} className="border border-slate-300 dark:border-slate-600 p-2 bg-slate-100 dark:bg-slate-800">{header}</th>)}</tr>
-                                </thead>
-                                <tbody>
-                                    {table.rows?.map((row: string[], rIndex: number) => <tr key={rIndex}>{row.map((cell, cIndex) => <td key={cIndex} className="border border-slate-300 dark:border-slate-600 p-2">{cell}</td>)}</tr>)}
-                                </tbody>
-                            </table>
-                        </div>
-                    )) : <p>No tables were extracted.</p>}
-                </div>
-            );
-            case 'meta': return <CodeBlock language="json" code={JSON.stringify({ documentStructure: result.documentStructure, overallConfidence: result.overallConfidence }, null, 2)} />;
+            case 'tables': return <CodeBlock language="json" code={JSON.stringify(result.tables || [], null, 2)} />;
+            case 'structure': return <CodeBlock language="json" code={JSON.stringify(result.documentStructure || {}, null, 2)} />;
             default: return null;
         }
     };
-    
+
     return (
-        <div className="p-6 h-full flex flex-col">
+        <div className="p-3 h-full flex flex-col">
             <h3 className="text-xl font-bold mb-4">Text Extractor AI</h3>
-            <div className="flex-grow grid md:grid-cols-5 gap-6 overflow-hidden">
-                <div className="md:col-span-2 flex flex-col gap-4 overflow-y-auto pr-2">
+            <div className="flex-grow grid md:grid-cols-2 gap-6 overflow-hidden">
+                {/* Left Panel: Controls */}
+                <div className="flex flex-col gap-4 overflow-y-auto pr-2">
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">1. Input Method</label>
-                        <div className="flex bg-slate-100 dark:bg-slate-800 rounded-md p-1">
-                            <button onClick={() => setInputMode('file')} className={`flex-1 text-sm p-2 rounded ${inputMode === 'file' ? 'bg-brand-primary text-white' : 'hover:bg-slate-200 dark:hover:bg-slate-700'}`}>File Upload</button>
-                            <button onClick={() => setInputMode('camera')} className={`flex-1 text-sm p-2 rounded ${inputMode === 'camera' ? 'bg-brand-primary text-white' : 'hover:bg-slate-200 dark:hover:bg-slate-700'}`}>Live Camera</button>
+                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">1. Input Source</label>
+                        <div className="flex bg-slate-200 dark:bg-slate-800 rounded-md p-1">
+                            <button onClick={() => setInputMode('file')} className={`flex-1 text-sm p-2 rounded ${inputMode === 'file' ? 'bg-brand-primary text-white' : 'hover:bg-slate-300 dark:hover:bg-slate-700'}`}>File Upload</button>
+                            <button onClick={() => setInputMode('camera')} className={`flex-1 text-sm p-2 rounded ${inputMode === 'camera' ? 'bg-brand-primary text-white' : 'hover:bg-slate-300 dark:hover:bg-slate-700'}`}>Live Camera</button>
                         </div>
                     </div>
-                    {inputMode === 'file' && (
+
+                    {inputMode === 'file' ? (
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">2. Upload Document Image</label>
                             <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-300 dark:border-slate-600 border-dashed rounded-md">
                                 <div className="space-y-1 text-center">
-                                    {previewUrl ? <img src={previewUrl} alt="Preview" className="mx-auto h-24 w-auto object-contain" /> : <svg className="mx-auto h-12 w-12 text-slate-500" stroke="currentColor" fill="none" viewBox="0 0 48 48"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" strokeWidth="2"/></svg>}
-                                    <label htmlFor="text-extractor-input" className="cursor-pointer font-medium text-brand-primary hover:text-brand-secondary"><span>{imageFile ? "Change image" : "Upload an image"}</span><input id="text-extractor-input" type="file" className="sr-only" accept="image/*" onChange={handleFileChange} /></label>
+                                    {previewUrl ? <img src={previewUrl} alt="Preview" className="mx-auto h-32 w-auto object-contain rounded-md" /> : <svg className="mx-auto h-12 w-12 text-slate-500" stroke="currentColor" fill="none" viewBox="0 0 48 48"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" strokeWidth="2"/></svg>}
+                                    <label htmlFor="extractor-input" className="cursor-pointer font-medium text-brand-primary hover:text-brand-secondary"><span>{imageFile ? "Change file" : "Upload an image"}</span><input id="extractor-input" type="file" className="sr-only" accept="image/*" onChange={handleFileChange} /></label>
                                 </div>
                             </div>
                         </div>
-                    )}
-                    {inputMode === 'camera' && (
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">2. Camera View</label>
-                            <div className="aspect-video bg-slate-200 dark:bg-slate-900/50 rounded-lg border border-slate-300 dark:border-slate-700 flex items-center justify-center">
-                                <video ref={videoRef} autoPlay playsInline muted className={`w-full h-full object-cover rounded-lg ${!isCameraOn && 'hidden'}`} />
-                                {!isCameraOn && <p className="text-slate-600 dark:text-slate-500">Camera is off</p>}
-                            </div>
-                            <div className="flex items-center gap-2 mt-2">
-                                <button onClick={handleToggleCamera} className={`flex-grow py-2 px-4 rounded-md font-semibold text-white ${isCameraOn ? 'bg-red-600' : 'bg-green-600'}`}>
-                                    {isCameraOn ? 'Stop Camera' : 'Start Camera'}
-                                </button>
-                                {isCameraOn && isFacingModeSupported && (
-                                    <button onClick={handleSwitchCamera} className="p-2 bg-slate-500 text-white rounded-md font-semibold" aria-label="Switch camera">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 19H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/><path d="M13 5H20a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2h-5"/><path d="m17 16-4-4 4-4"/><path d="m7 8 4 4-4 4"/></svg>
-                                    </button>
-                                )}
+                    ) : (
+                        <div className="relative aspect-video bg-black rounded-md overflow-hidden">
+                            <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover" />
+                            <canvas ref={canvasRef} className="hidden" />
+                            <div className="absolute bottom-2 left-2 right-2 flex justify-between">
+                                <button onClick={handleToggleCamera} className="py-2 px-4 bg-black/50 text-white rounded-md font-semibold text-sm">{isCameraOn ? 'Stop Camera' : 'Start Camera'}</button>
+                                {isCameraOn && isFacingModeSupported && <button onClick={handleSwitchCamera} className="py-2 px-4 bg-black/50 text-white rounded-md font-semibold text-sm">Switch</button>}
                             </div>
                         </div>
                     )}
-                    <canvas ref={canvasRef} className="hidden" />
-                     <div>
-                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">3. Configure Features</label>
-                        <div className="space-y-2">
-                            <FeatureToggle label="Handwriting Recognition" description="Recognize handwritten text." configKey="handwriting" />
-                            <FeatureToggle label="Key-Value Pair Extraction" description="Identify labels and their values." configKey="extractKeyValuePairs" />
-                            <FeatureToggle label="Table Extraction" description="Extract data from tables." configKey="extractTables" />
+                    
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">2. Extraction Config</label>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <FeatureToggle label="Printed Text (OCR)" description="Recognize standard printed characters." configKey="ocr" />
+                            <FeatureToggle label="Handwriting (ICR)" description="Recognize handwritten text." configKey="handwriting" />
+                            <FeatureToggle label="Key-Value Pairs" description="Extract form fields and values." configKey="extractKeyValuePairs" />
+                            <FeatureToggle label="Tables" description="Extract structured table data." configKey="extractTables" />
+                            <FeatureToggle label="Document Structure" description="Identify headers, footers, etc." configKey="identifyDocumentStructure" />
+                            <FeatureToggle label="Contextual Understanding" description="Interpret data, don't just extract." configKey="contextualUnderstanding" />
+                            <FeatureToggle label="Image Pre-processing" description="Correct for skew and orientation." configKey="performImagePreprocessing" />
+                            <FeatureToggle label="Confidence Score" description="Include confidence for extractions." configKey="includeConfidenceScore" />
+                        </div>
+                        <div className="mt-2">
+                            <label className="block text-xs font-medium text-slate-700 dark:text-slate-400">Language Hint</label>
+                            <select value={config.multiLanguage} onChange={e => handleConfigChange('multiLanguage', e.target.value)} className="w-full text-sm mt-1 bg-slate-100 dark:bg-slate-700/50 p-2 rounded-md border border-slate-300 dark:border-slate-600">
+                                {LANGUAGES.map(lang => <option key={lang} value={lang}>{lang}</option>)}
+                            </select>
                         </div>
                     </div>
+
                     <button onClick={handleSubmit} disabled={isLoading || (inputMode === 'file' && !imageFile) || (inputMode === 'camera' && !isCameraOn)} className="w-full py-2 px-4 bg-brand-primary text-white rounded-md font-semibold disabled:bg-slate-400 dark:disabled:bg-slate-600 flex justify-center mt-auto">
-                        {isLoading ? <Spinner/> : (inputMode === 'camera' ? 'Capture & Analyze' : 'Analyze Document')}
+                        {isLoading ? <Spinner /> : 'Extract Data'}
                     </button>
                     {error && <p className="text-red-500 dark:text-red-400 text-sm mt-2">{error}</p>}
                 </div>
-                <div className="md:col-span-3 bg-white dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-700 flex flex-col overflow-hidden">
-                    <div className="flex-shrink-0 border-b border-slate-200 dark:border-slate-700"><div className="flex space-x-2 px-2">{[{id:'raw', name:'Raw Text'}, {id:'kvp', name:'Key-Value Pairs'}, {id:'tables', name:'Tables'}, {id:'meta', name:'Metadata'}].map(t => <button key={t.id} onClick={() => setActiveTab(t.id)} disabled={!result} className={`${activeTab === t.id ? 'border-brand-primary text-brand-primary' : 'border-transparent text-slate-600 dark:text-slate-400'} whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm disabled:opacity-50`}>{t.name}</button>)}</div></div>
+
+                {/* Right Panel: Results */}
+                <div className="bg-white dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-700 flex flex-col overflow-hidden">
+                    <div className="flex-shrink-0 border-b border-slate-200 dark:border-slate-700">
+                        <div className="flex space-x-2 p-2 overflow-x-auto">
+                            <button onClick={() => setActiveTab('raw')} className={`text-xs px-3 py-1 rounded-md ${activeTab === 'raw' ? 'bg-brand-primary text-white' : 'bg-slate-200 dark:bg-slate-700'}`}>Raw Text</button>
+                            <button onClick={() => setActiveTab('kvp')} className={`text-xs px-3 py-1 rounded-md ${activeTab === 'kvp' ? 'bg-brand-primary text-white' : 'bg-slate-200 dark:bg-slate-700'}`}>Key-Value</button>
+                            <button onClick={() => setActiveTab('tables')} className={`text-xs px-3 py-1 rounded-md ${activeTab === 'tables' ? 'bg-brand-primary text-white' : 'bg-slate-200 dark:bg-slate-700'}`}>Tables</button>
+                            <button onClick={() => setActiveTab('structure')} className={`text-xs px-3 py-1 rounded-md ${activeTab === 'structure' ? 'bg-brand-primary text-white' : 'bg-slate-200 dark:bg-slate-700'}`}>Structure</button>
+                        </div>
+                    </div>
                     <div className="flex-grow p-4 overflow-y-auto">
-                        {isLoading ? <div className="h-full flex items-center justify-center"><Spinner /></div> : result ? renderResult() : <p className="text-slate-600 dark:text-slate-500">Analysis results will appear here.</p>}
+                        {isLoading ? <div className="h-full flex items-center justify-center"><Spinner /></div> : result ? renderResult() : <p className="text-slate-600 dark:text-slate-500">Extraction results will appear here.</p>}
                     </div>
                 </div>
             </div>

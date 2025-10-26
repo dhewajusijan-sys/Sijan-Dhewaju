@@ -10,7 +10,15 @@ import {
 import { generateLogo, generateImage, generateVisualDesign, editText } from '../../services/geminiService';
 import Spinner from './Spinner';
 
-// --- Helper Functions (Audio) ---
+// --- Helper Functions (Audio & Blob) ---
+const blobToBase64 = (blob: Blob): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onload = () => resolve((reader.result as string).split(',')[1]);
+      reader.onerror = error => reject(error);
+    });
+};
 function encode(bytes: Uint8Array) { let binary = ''; const len = bytes.byteLength; for (let i = 0; i < len; i++) { binary += String.fromCharCode(bytes[i]); } return btoa(binary); }
 function decode(base64: string) { const binaryString = atob(base64); const len = binaryString.length; const bytes = new Uint8Array(len); for (let i = 0; i < len; i++) { bytes[i] = binaryString.charCodeAt(i); } return bytes; }
 function createBlob(inputData: Float32Array): GenAI_Blob { const l = inputData.length; const int16 = new Int16Array(l); for (let i = 0; i < l; i++) { int16[i] = inputData[i] * 32768; } return { data: encode(new Uint8Array(int16.buffer)), mimeType: 'audio/pcm;rate=16000' }; }
@@ -52,8 +60,11 @@ const startNavigationFunctionDeclaration: FunctionDeclaration = { name: 'startNa
 const controlSystemSettingFunctionDeclaration: FunctionDeclaration = { name: 'controlSystemSetting', description: "Controls device or operating system settings like 'Do Not Disturb' or 'flashlight'.", parameters: { type: Type.OBJECT, properties: { setting: { type: Type.STRING }, action: { type: Type.STRING, enum: ['on', 'off', 'set'] }, value: { type: Type.STRING } }, required: ['setting', 'action'] } };
 const executeSecureTransactionFunctionDeclaration: FunctionDeclaration = { name: 'executeSecureTransaction', description: "Executes a secure financial transaction after voice biometric verification.", parameters: { type: Type.OBJECT, properties: { transactionType: { type: Type.STRING, description: "e.g., 'pay credit card bill'" } }, required: ['transactionType'] } };
 
-// New "Seeing" (Vision) Tool
+// "Seeing" (Vision) Tool
 const readTextFromScreenFunctionDeclaration: FunctionDeclaration = { name: 'readTextFromScreen', description: "Uses Computer Vision and OCR to read and extract all text visible on the user's screen or camera.", parameters: { type: Type.OBJECT, properties: {}, required: [] } };
+
+// Session Control Tool
+const endSessionFunctionDeclaration: FunctionDeclaration = { name: 'end_session', description: "Ends the current voice assistant session.", parameters: { type: Type.OBJECT, properties: {}, required: [] } };
 
 interface AssistiveTouchProps {
   onNavigate: (tabId: string, data: any) => void;
@@ -84,6 +95,9 @@ const AssistiveTouch: React.FC<AssistiveTouchProps> = ({ onNavigate }) => {
     const micStreamRef = useRef<MediaStream | null>(null);
     const mediaStreamSourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
     const scriptProcessorRef = useRef<ScriptProcessorNode | null>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const frameIntervalRef = useRef<number | null>(null);
 
     useEffect(() => {
         const appMainContainer = document.querySelector('main > div');
@@ -99,6 +113,14 @@ const AssistiveTouch: React.FC<AssistiveTouchProps> = ({ onNavigate }) => {
         setIsConnecting(false);
         if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
         setElapsedTime(0);
+
+        if (frameIntervalRef.current) {
+            clearInterval(frameIntervalRef.current);
+            frameIntervalRef.current = null;
+        }
+        if (videoRef.current) {
+            videoRef.current.srcObject = null;
+        }
 
         for (const source of sourcesRef.current.values()) { try { source.stop(); } catch (e) {} }
         sourcesRef.current.clear();
@@ -127,8 +149,12 @@ const AssistiveTouch: React.FC<AssistiveTouchProps> = ({ onNavigate }) => {
         const systemInstruction = "Your name is 'Nepal's 1st AI', an advanced Intelligent Automation platform. You have four core capabilities: 1. Automation Engine (RPA): You execute rule-based tasks like clicking, typing, and data entry. 2. The Brain (ML): You learn from data to make predictions and improve. 3. Language (NLP): You understand and generate human language. 4. Seeing (Vision): You can 'read' visual data from the user's camera/screen to extract text or identify objects. Be concise and confirm the actions you take.";
         
         try {
-            const micStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+            const micStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: { facingMode: 'user' } });
             micStreamRef.current = micStream;
+            if (videoRef.current) {
+                videoRef.current.srcObject = micStream;
+                videoRef.current.play().catch(console.error);
+            }
 
             inputAudioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
             outputAudioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
@@ -151,6 +177,31 @@ const AssistiveTouch: React.FC<AssistiveTouchProps> = ({ onNavigate }) => {
                             sessionPromiseRef.current?.then((session) => session.sendRealtimeInput({ media: createBlob(inputData) }));
                         };
                         source.connect(scriptProcessor); scriptProcessor.connect(inputCtx.destination);
+
+                        const videoEl = videoRef.current;
+                        const canvasEl = canvasRef.current;
+                        if (videoEl && canvasEl) {
+                            const ctx = canvasEl.getContext('2d');
+                            if (ctx) {
+                                frameIntervalRef.current = window.setInterval(() => {
+                                    if (videoEl.readyState >= 2 && videoEl.videoWidth > 0) {
+                                        canvasEl.width = videoEl.videoWidth;
+                                        canvasEl.height = videoEl.videoHeight;
+                                        ctx.drawImage(videoEl, 0, 0, videoEl.videoWidth, videoEl.videoHeight);
+                                        canvasEl.toBlob(async (blob) => {
+                                            if (blob) {
+                                                const base64Data = await blobToBase64(blob);
+                                                sessionPromiseRef.current?.then((session) => {
+                                                    session.sendRealtimeInput({
+                                                        media: { data: base64Data, mimeType: 'image/jpeg' }
+                                                    });
+                                                });
+                                            }
+                                        }, 'image/jpeg', 0.8);
+                                    }
+                                }, 1000 / 15); // 15 FPS
+                            }
+                        }
                     },
                     onmessage: async (message: LiveServerMessage) => {
                         if (message.toolCall) {
@@ -160,7 +211,7 @@ const AssistiveTouch: React.FC<AssistiveTouchProps> = ({ onNavigate }) => {
                                 try {
                                     switch(fc.name) {
                                         // Creative & Personal
-                                        case 'generate_logo': const logoRes = await generateImage(`A logo for "${String(fc.args.prompt)}". Style: Minimalist. Color Palette: Vibrant & Colorful. The logo should be professional, clean, modern, and suitable for branding. It must be on a solid white background, presented as a flat vector-style graphic.`, 4, '1:1'); navData = { toolId: 'logo-maker', data: logoRes.generatedImages.map(img => ({ url: `data:image/jpeg;base64,${img.image.imageBytes}`, base64: img.image.imageBytes })) }; break;
+                                        case 'generate_logo': const logoRes = await generateImage(`A logo for "${String(fc.args.prompt)}". Style: Minimalist. Color Palette: Vibrant & Colorful. The logo should be professional, clean, modern, and suitable for branding. It must be on a solid white background, presented as a flat vector-style graphic.`, 4, '1:1'); navData = { toolId: 'visual-suite', data: { subToolId: 'logo', data: logoRes.generatedImages.map(img => ({ url: `data:image/jpeg;base64,${img.image.imageBytes}`, base64: img.image.imageBytes })) } }; break;
                                         case 'generate_thumbnail': const thumbRes = await generateImage( `Generate 4 YouTube thumbnails for a video titled "${String(fc.args.title)}" with a style of "${String(fc.args.style)}"`, 4, '16:9' ); navData = { toolId: 'visual-suite', data: { subToolId: 'thumbnail', data: thumbRes.generatedImages.map(img => `data:image/jpeg;base64,${img.image.imageBytes}`) } }; break;
                                         case 'generate_resume': const resumeRes = await editText('Create a resume from these details.', String(fc.args.professional_details)); navData = { toolId: 'visual-suite', data: { subToolId: 'resume', data: resumeRes.text } }; break;
                                         case 'generate_visual_design': const designRes = await generateVisualDesign(String(fc.args.prompt)); navData = { toolId: 'visual-suite', data: { subToolId: 'design', data: JSON.parse(designRes.text).designHtml } }; break;
@@ -185,7 +236,10 @@ const AssistiveTouch: React.FC<AssistiveTouchProps> = ({ onNavigate }) => {
                                         case 'autoTypeAndClick': if (fc.args.text_to_type) { alert(`Desktop Automation: Typing "${String(fc.args.text_to_type)}"`); result = `Simulating typing of text.`; } else if (fc.args.click_target) { alert(`Desktop Automation: Clicking on "${String(fc.args.click_target)}"`); result = `Simulating a click on '${String(fc.args.click_target)}'.`; } break;
                                         case 'dictateAndFormat': alert(`Desktop Automation: Dictating text and applying format: ${String(fc.args.format_action)}`); result = `Simulating dictation and formatting.`; break;
                                         case 'manageFiles': alert(`Desktop Automation: ${String(fc.args.action)} file: ${String(fc.args.fileName)}`); result = `Simulating file operation.`; break;
-                                        case 'manageEmail': alert(`Desktop Automation: Composing email to ${String(fc.args.recipient)}`); result = `Simulating email composition.`; break;
+                                        case 'manageEmail': 
+                                            result = `Simulating email ${String(fc.args.action)} to ${String(fc.args.recipient)}.`;
+                                            alert(`Simulating Email Action: ${String(fc.args.action)}\nFrom: dhewajusijan@gmail.com\nTo: ${String(fc.args.recipient || 'N/A')}\nSubject: ${String(fc.args.subject || 'N/A')}\nBody: ${String(fc.args.body || 'N/A')}`);
+                                            break;
                                         case 'executeCustomScript': alert(`Desktop Automation: Executing script "${String(fc.args.scriptName)}"`); result = `Simulating script execution.`; break;
                                         case 'sendTextMessage': alert(`Device Automation: Sending text to ${String(fc.args.recipient)}: "${String(fc.args.message)}"`); result = `Simulating sending text message.`; break;
                                         case 'startNavigation': alert(`Device Automation: Navigating to ${String(fc.args.destination)}`); result = `Simulating navigation start.`; break;
@@ -194,10 +248,24 @@ const AssistiveTouch: React.FC<AssistiveTouchProps> = ({ onNavigate }) => {
                                         
                                         // Vision
                                         case 'readTextFromScreen': alert('Vision Automation: Reading text from screen/camera.'); result = "Simulating screen text extraction. Text has been read."; break;
+
+                                        // Session Control
+                                        case 'end_session':
+                                            result = "OK, ending the session now.";
+                                            sessionPromiseRef.current?.then(s => {
+                                                s.sendToolResponse({ functionResponses: { id: fc.id, name: fc.name, response: { result } } });
+                                                setTimeout(() => stopSession(), 100);
+                                            });
+                                            break;
                                     }
                                     if (navData) { onNavigate('studio', navData); stopSession(); }
                                 } catch (e) { console.error("Tool call failed", e); result = `Error executing tool: ${fc.name}`; }
-                                finally { sessionPromiseRef.current?.then(s => s.sendToolResponse({ functionResponses: { id: fc.id, name: fc.name, response: { result } } })); }
+                                finally {
+                                    // Don't send a response if the session is already ending
+                                    if (fc.name !== 'end_session') {
+                                        sessionPromiseRef.current?.then(s => s.sendToolResponse({ functionResponses: { id: fc.id, name: fc.name, response: { result } } }));
+                                    }
+                                }
                              }
                         }
                         
@@ -230,6 +298,8 @@ const AssistiveTouch: React.FC<AssistiveTouchProps> = ({ onNavigate }) => {
                         manageApplicationFunctionDeclaration, autoTypeAndClickFunctionDeclaration, dictateAndFormatFunctionDeclaration, manageFilesFunctionDeclaration, manageEmailFunctionDeclaration, executeCustomScriptFunctionDeclaration, sendTextMessageFunctionDeclaration, startNavigationFunctionDeclaration, controlSystemSettingFunctionDeclaration, executeSecureTransactionFunctionDeclaration,
                         // Vision
                         readTextFromScreenFunctionDeclaration,
+                        // Session Control
+                        endSessionFunctionDeclaration,
                     ] }],
                 },
             });
@@ -338,6 +408,8 @@ const AssistiveTouch: React.FC<AssistiveTouchProps> = ({ onNavigate }) => {
 
     return (
         <>
+            <video ref={videoRef} playsInline autoPlay muted className="hidden" />
+            <canvas ref={canvasRef} className="hidden" />
             {showPermissionPrompt && (
                 <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => setShowPermissionPrompt(false)}>
                     <div className="global-panel p-6 text-slate-800 dark:text-white text-center max-w-sm rounded-lg" onClick={e => e.stopPropagation()}>

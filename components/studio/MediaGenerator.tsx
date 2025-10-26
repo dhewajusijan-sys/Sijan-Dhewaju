@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import { generateImage } from '../../services/geminiService';
 import Spinner from '../common/Spinner';
@@ -33,7 +32,7 @@ const MediaGenerator: React.FC = () => {
     }, [prompt]);
 
     return (
-        <div className="p-6 h-full flex flex-col">
+        <div className="p-3 h-full flex flex-col">
             <h3 className="text-xl font-bold mb-4">Media Generator</h3>
             <div className="flex flex-col sm:flex-row gap-2 mb-4">
                 <input

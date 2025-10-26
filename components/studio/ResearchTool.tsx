@@ -66,7 +66,7 @@ const ResearchTool: React.FC = () => {
     }, [query, activeTaskId]);
 
     return (
-        <div className="p-6 h-full flex flex-col">
+        <div className="p-3 h-full flex flex-col">
             <h3 className="text-xl font-bold mb-4">AI Web Agent</h3>
             <div className='mb-4'>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">1. Choose a Task</label>

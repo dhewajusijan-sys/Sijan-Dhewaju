@@ -274,7 +274,7 @@ const VideoStudio: React.FC = () => {
                             {Object.entries(EFFECT_CATEGORIES).map(([category, effects]) => (
                                 <details key={category} open={category === 'Color & Tone'}>
                                     <summary className="font-semibold text-xs cursor-pointer">{category}</summary>
-                                    <div className="grid grid-cols-2 gap-2 mt-1">{effects.map(renderEffectControl)}</div>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">{effects.map(renderEffectControl)}</div>
                                 </details>
                             ))}
                         </div>

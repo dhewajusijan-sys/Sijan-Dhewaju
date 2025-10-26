@@ -30,7 +30,7 @@ const MusicGenerator: React.FC = () => {
     }, [prompt]);
 
     return (
-        <div className="p-4 sm:p-6 h-full flex flex-col">
+        <div className="p-3 h-full flex flex-col">
             <div className="grid md:grid-cols-3 gap-6 flex-grow overflow-hidden">
                 <div className="md:col-span-1 flex flex-col gap-4">
                     <h4 className="text-lg font-bold text-slate-900 dark:text-slate-100">Song Generation</h4>
@@ -84,7 +84,7 @@ const PodcastStudio: React.FC = () => {
     };
 
     return (
-        <div className="p-4 sm:p-6 h-full flex flex-col">
+        <div className="p-3 h-full flex flex-col">
              <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-3">
                     <label className="py-2 px-4 bg-brand-blue text-white rounded-md font-semibold text-sm cursor-pointer hover:bg-sky-400 transition-colors">

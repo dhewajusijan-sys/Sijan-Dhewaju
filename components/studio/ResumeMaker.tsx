@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useEffect } from 'react';
 import { editText } from '../../services/geminiService';
 import Spinner from '../common/Spinner';
@@ -126,7 +127,7 @@ const ResumeMaker: React.FC<ResumeMakerProps> = ({ initialData }) => {
     );
 
     return (
-        <div className="p-4 sm:p-6 h-full flex flex-col">
+        <div className="p-3 h-full flex flex-col">
             <div className="flex-grow bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-700 p-4 overflow-y-auto">
                 {error && <p className="text-red-500 dark:text-red-400 text-sm mb-4">{error}</p>}
                 {step === 1 && renderStep1()}
