@@ -1,6 +1,3 @@
-
-
-
 import React, { useState } from 'react';
 import Header from './components/Header';
 import Tabs from './components/Tabs';
@@ -47,7 +44,7 @@ const App: React.FC = () => {
     },
   ];
 
-  const showAssistiveTouch = !(activeTab === 'studio' && activeStudioToolId === 'camera-fx');
+  const showAssistiveTouch = !(activeTab === 'studio' && activeStudioToolId === 'webcam-fx');
 
   return (
     <div className="text-slate-800 dark:text-slate-200 min-h-screen flex flex-col font-sans">

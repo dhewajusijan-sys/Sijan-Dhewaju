@@ -222,24 +222,28 @@ const LiveConversationView: React.FC = () => {
 
         for (const source of sourcesRef.current.values()) {
             try { 
-                source.stop(0); 
+                source.stop(); 
             } catch (e) {}
         }
         sourcesRef.current.clear();
 
         if (scriptProcessorRef.current) {
             try {
-                scriptProcessorRef.current.disconnect(0);
+                scriptProcessorRef.current.disconnect();
             } catch(e) {}
             scriptProcessorRef.current.onaudioprocess = null;
             scriptProcessorRef.current = null;
         }
         if (mediaStreamSourceRef.current) {
-            mediaStreamSourceRef.current.disconnect();
+            try {
+                mediaStreamSourceRef.current.disconnect();
+            } catch(e) {}
             mediaStreamSourceRef.current = null;
         }
         if (analyserRef.current) {
-            analyserRef.current.disconnect();
+            try {
+                analyserRef.current.disconnect();
+            } catch(e) {}
             analyserRef.current = null;
         }
 
@@ -466,7 +470,7 @@ const LiveConversationView: React.FC = () => {
                             const audioBuffer = await decodeAudioData(decode(base64Audio), outputCtx, 24000, 1);
                             const source = outputCtx.createBufferSource();
                             source.buffer = audioBuffer;
-                            source.connect(outputCtx.destination);
+                            source.connect(outputNode);
                             source.addEventListener('ended', () => {
                                 sourcesRef.current.delete(source);
                                 aiSpeakingCounter.current--;
@@ -482,7 +486,7 @@ const LiveConversationView: React.FC = () => {
                         const interrupted = message.serverContent?.interrupted;
                         if (interrupted) {
                             for (const source of sourcesRef.current.values()) {
-                                source.stop(0);
+                                source.stop();
                                 sourcesRef.current.delete(source);
                             }
                             nextStartTimeRef.current = 0;

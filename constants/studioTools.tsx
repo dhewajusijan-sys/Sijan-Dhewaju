@@ -1,4 +1,3 @@
-
 import React from 'react';
 import type { StudioTool } from '../types';
 
@@ -60,7 +59,7 @@ export const STUDIO_TOOLS: StudioTool[] = [
     { id: '3d-creator', name: '3D Creator', description: 'Generate 3D models from text/image.', icon: <CubeIcon />, component: ThreeDCreator },
     { id: 'ar-maker', name: 'AR Maker', description: 'Create AR via text, image or video.', icon: <QrCodeIcon />, component: ARMaker },
     { id: 'watermark-studio', name: 'Watermark Studio', description: 'Add or remove image watermarks.', icon: <WaterIcon />, component: WatermarkStudio },
-    { id: 'camera-fx', name: 'Camera FX', description: 'Apply live AI effects to your webcam.', icon: <CameraIcon />, component: WebcamFxView },
+    { id: 'webcam-fx', name: 'Camera FX', description: 'Apply live AI effects to your webcam.', icon: <CameraIcon />, component: WebcamFxView },
     { id: 'vr-training', name: 'VR Training', description: 'Simulate scenarios in virtual reality.', icon: <VrIcon />, component: VRTraining },
     { id: 'voice-cloner', name: 'Voice Cloner', description: 'Create a digital clone of your voice.', icon: <MicIcon />, component: VoiceCloner },
     { id: 'content-query', name: 'Content Query AI', description: 'Ask questions about your documents.', icon: <SearchIcon />, component: ContentQueryAI },
